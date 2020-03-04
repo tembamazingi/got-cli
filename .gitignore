@@ -1,0 +1,5 @@
+.vscode
+auth/
+shell/.hosts
+shell/.cloud
+vm/vagrant/.vagrant

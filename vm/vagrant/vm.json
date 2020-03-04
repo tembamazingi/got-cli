@@ -1,0 +1,13 @@
+[
+  {
+    "name": "vm-vagrant",
+    "mem": 4096,
+    "cpu": 2,
+    "hostname": "vm.local",
+    "eth1": "192.168.33.10",
+    "sync": {
+        "project": "pareto/mowana",
+        "target": "/var/www/vm.local"
+    }
+  }
+]

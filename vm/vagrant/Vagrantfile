@@ -1,0 +1,87 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+# Require JSON module
+require 'json'
+
+# Read JSON file(s) for details of machine(s) to boot up:
+# Option 1: Single-Machine Environment.
+boxes = JSON.parse(File.read(File.join(File.dirname(__FILE__), 'vm.json')))
+
+# Option 2: Multi-Machine Environment.
+# boxes = JSON.parse(File.read(File.join(File.dirname(__FILE__), 'multi.json')))
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  # Run vbguest plugin only when needed.
+  if Vagrant.has_plugin?("vagrant-vbguest")
+    config.vbguest.auto_update = true
+  end
+
+  # Speed up provisioning with vagrant-cachier.
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box
+    config.cache.enable :apt
+  else
+    puts "[-] WARN: This would be much faster if you ran vagrant plugin install vagrant-cachier first"
+  end
+
+  # A manager for /etc/hosts entries on the host machine.
+  if Vagrant.has_plugin?("vagrant-hostmanager")
+    config.hostmanager.enabled = true
+    config.hostmanager.manage_host = true
+    config.hostmanager.ignore_private_ip = false
+    config.hostmanager.include_offline = true
+  end
+
+  # An rsync watcher for writes on vagrant hosts.
+  if Vagrant.has_plugin?("vagrant-gatling-rsync")
+    config.gatling.latency = 1.5
+    config.gatling.time_format = "%H:%M:%S"
+    config.gatling.rsync_on_startup = false
+  end
+
+  # Initialise a VM for each box defined above.
+  port_forward = 8887
+  boxes.each do |opts|
+
+    config.vm.define opts['name'] do |config|
+
+      config.vm.provider "virtualbox" do |v|
+        v.memory = opts['mem']
+        v.cpus = opts['cpu']
+      end
+
+      config.vm.box = "vm/skaftin"
+      config.vm.hostname = opts['hostname']
+      config.ssh.forward_agent = true
+      config.vm.network :private_network, ip: opts['eth1']
+      config.vm.network "forwarded_port", guest: 80, host: port_forward += 1, auto_correct: true
+      # config.vm.network "forwarded_port", guest: 3306, host: 3306
+
+      if opts['sync']
+
+        unless opts['sync'].has_key?('projects')
+
+          config.vm.synced_folder "#{ENV['HOME']}/Projects/#{opts['sync']['project']}", "#{opts['sync']['target']}", create: true, type: "rsync", rsync__exclude: [".git/"]
+
+        else
+
+          for i in 0..(opts['sync']['projects'].length - 1)
+
+            project, target = "#{ENV['HOME']}/Projects/#{opts['sync']['projects'][i]}", "#{opts['sync']['targets'][i]}"
+            config.vm.synced_folder project, target, create: true, type: "rsync", rsync__exclude: [".git/",]
+
+          end
+
+        end
+
+      end
+
+    end
+
+  end
+
+end

@@ -1,0 +1,18 @@
+######################### Mac OS X Specific #########################
+alias @!='dscacheutil -flushcache'
+alias osx='sw_vers'
+alias xv='/usr/bin/xcodebuild -version'
+alias wall='killall Dock'
+
+# Homebrew
+alias b.='brew install'
+alias b!='brew uninstall'
+alias b?='brew search'
+alias b*='brew update'
+alias b:i='brew info'
+alias b:c='brew cleanup'
+alias b:dr='brew doctor'
+alias b:l='brew list'
+alias b:o='brew outdated'
+alias b:u='brew upgrade'
+# END OF FILE
