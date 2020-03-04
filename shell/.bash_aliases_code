@@ -1,2 +1,0 @@
-# WP-CLI.
-alias w:p='php -d memory_limit=2048M "$(which wp)" '

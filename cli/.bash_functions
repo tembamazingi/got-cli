@@ -128,13 +128,3 @@ g:cli_qd ()
   php -S localhost:8000 -t "${1:-.}"
 
 }
-
-
-# Vagrant: Update all installed plugins
-g:cli_vx* () {
-
-  for plugin in $(vagrant plugin list | cut -f1 -d' '); do
-    vagrant plugin install $plugin;
-  done;
-
-}
