@@ -1,5 +1,5 @@
 .vscode
 auth/
-shell/.hosts
-shell/.cloud
+cli/.hosts
+cli/.cloud
 vm/vagrant/.vagrant
