@@ -1,5 +1,5 @@
 # Archives - create new
-a. () {
+g:cli_a. () {
 
   if [ "$#" -ne 0 ] ; then
     FILE="$1"
@@ -19,7 +19,7 @@ a. () {
 }
 
 # Archives - Extract
-a.. () {
+g:cli_a.. () {
 
   if [ $# -lt 1 ]
   then
@@ -49,24 +49,24 @@ a.. () {
 }
 
 # Ansible: execute command on remote host.
-ax() {
+g:cli_ax () {
 
   playbook_file=$1
   target_hosts=$2
-  ansible-playbook --private-key=/Users/$(whoami)/.ssh/id_rsa -i hosts -u root "$1" --limit "$2"
+  ansible-playbook --private-key=$HOME/.ssh/id_rsa -i hosts -u root "$playbook_file" --limit "$target_hosts"
 
 }
 
-ax?() {
+g:cli_ax? () {
 
   playbook_file=$1
   target_hosts=$2
-  ansible-playbook --private-key=/Users/$(whoami)/.ssh/id_rsa -i hosts -u root -vvvv "$1" --limit "$2" --list-hosts --check
+  ansible-playbook --private-key=$HOME/.ssh/id_rsa -i hosts -u root -vvvv "$playbook_file" --limit "$target_hosts" --list-hosts --check
 
 }
 
 # Files/Folders: Make folder and enter
-cd! (){
+g:cli_cd! (){
 
   if [ -f "$1" ] ; then
     echo "File $1 exists~"
@@ -82,29 +82,29 @@ cd! (){
 }
 
 # Functions: Introspection - list the available functions
-f:l () {
+g:cli_fl () {
 
-  local functionlist=`compgen -A function`; # Get function list
+  local functionlist=`compgen -A function | grep g:cli_`; # Get function list
   echo -e "$functionlist \n"
 
 }
 
 # Git - config
-g. () {
+g:cli_g. () {
 
   git config --global user.name "$1" && git config --global user.email "$2"
 
 }
 
 # Git - link local repo to remote origin
-g?. () {
+g:cli_g? () {
 
   git remote add origin "$1" && git push -u origin master
 
 }
 
 # Git: Find files in the repository that are redundant and not referenced anywhere in the application's code.
-g:a? ()
+g:cli_ga? ()
 {
 
   for FILE in $(git ls-files ./$1); do
@@ -114,7 +114,7 @@ g:a? ()
 }
 
 # Git: Revert both the local and remote to a previous working commit.
-g:z! ()
+g:cli_gz! ()
 {
 
   git reset --hard $1 && git clean -f && git push -f origin $2
@@ -122,7 +122,7 @@ g:z! ()
 }
 
 # PHP: Start built-in web server.
-q:d ()
+g:cli_qd ()
 {
 
   php -S localhost:8000 -t "${1:-.}"
@@ -131,7 +131,7 @@ q:d ()
 
 
 # Vagrant: Update all installed plugins
-v:x* () {
+g:cli_vx* () {
 
   for plugin in $(vagrant plugin list | cut -f1 -d' '); do
     vagrant plugin install $plugin;

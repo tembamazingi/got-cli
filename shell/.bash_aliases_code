@@ -1,3 +1,2 @@
 # WP-CLI.
 alias w:p='php -d memory_limit=2048M "$(which wp)" '
-alias yaml2json="python -c 'import sys, yaml, json; y=yaml.load(sys.stdin.read()); print(json.dumps(y))'"

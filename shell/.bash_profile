@@ -54,8 +54,7 @@ export PS1="$RED[\A] $GREEN\u$NORMAL@\h $BLUE\W$ORANGE\$(__git_ps1) $NORMAL\$ "
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/temba/google-cloud-sdk/path.bash.inc' ]; then . '/Users/temba/google-cloud-sdk/path.bash.inc'; fi
+if [ -f "$HOME/google-cloud-sdk/path.bash.inc'" ]; then . "$HOME/google-cloud-sdk/path.bash.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/temba/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/temba/google-cloud-sdk/completion.bash.inc'; fi
-alias python=/usr/local/bin/python3.7
+if [ -f "$HOME/google-cloud-sdk/completion.bash.inc" ]; then . "$HOME/google-cloud-sdk/completion.bash.inc"; fi
