@@ -6,7 +6,7 @@
     "hostname": "vm.local",
     "eth1": "192.168.33.10",
     "sync": {
-        "project": "pareto/mowana",
+        "project": "demoprojectname",
         "target": "/var/www/vm.local"
     }
   }
