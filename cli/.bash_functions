@@ -1,5 +1,5 @@
 # Archives - create new
-g:cli_a. () {
+gc.a. () {
 
   if [ "$#" -ne 0 ] ; then
     FILE="$1"
@@ -19,7 +19,7 @@ g:cli_a. () {
 }
 
 # Archives - Extract
-g:cli_a.. () {
+gc.a.. () {
 
   if [ $# -lt 1 ]
   then
@@ -49,7 +49,7 @@ g:cli_a.. () {
 }
 
 # Ansible: execute command on remote host.
-g:cli_ax () {
+gc.ax () {
 
   playbook_file=$1
   target_hosts=$2
@@ -57,7 +57,7 @@ g:cli_ax () {
 
 }
 
-g:cli_ax? () {
+gc.ax? () {
 
   playbook_file=$1
   target_hosts=$2
@@ -66,7 +66,7 @@ g:cli_ax? () {
 }
 
 # Files/Folders: Make folder and enter
-g:cli_cd! (){
+gc.cd! (){
 
   if [ -f "$1" ] ; then
     echo "File $1 exists~"
@@ -82,29 +82,29 @@ g:cli_cd! (){
 }
 
 # Functions: Introspection - list the available functions
-g:cli_fl () {
+gc.fl () {
 
-  local functionlist=`compgen -A function | grep g:cli_`; # Get function list
+  local functionlist=`compgen -A function | grep gc.`; # Get function list
   echo -e "$functionlist \n"
 
 }
 
 # Git - config
-g:cli_g. () {
+gc.g. () {
 
   git config --global user.name "$1" && git config --global user.email "$2"
 
 }
 
 # Git - link local repo to remote origin
-g:cli_g? () {
+gc.g? () {
 
   git remote add origin "$1" && git push -u origin master
 
 }
 
 # Git: Find files in the repository that are redundant and not referenced anywhere in the application's code.
-g:cli_ga? ()
+gc.ga? ()
 {
 
   for FILE in $(git ls-files ./$1); do
@@ -114,7 +114,7 @@ g:cli_ga? ()
 }
 
 # Git: Revert both the local and remote to a previous working commit.
-g:cli_gz! ()
+gc.gz! ()
 {
 
   git reset --hard $1 && git clean -f && git push -f origin $2
@@ -122,7 +122,7 @@ g:cli_gz! ()
 }
 
 # PHP: Start built-in web server.
-g:cli_qd ()
+gc.qd ()
 {
 
   php -S localhost:8000 -t "${1:-.}"
