@@ -2,7 +2,7 @@
 OS="$(uname -s)"
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-dotfiles='.ansible.cfg .git-prompt.sh .ruby-version .gitexcludes .hosts'
+dotfiles='.git-prompt.sh .ruby-version .gitexcludes .hosts'
 dotfiles="$dotfiles .bash_aliases .bash_aliases_code .bash_aliases_git .bash_functions .bash_profile";
 [[ "$OS" = "Darwin" ]] && dotfiles="$dotfiles .bash_macos";
 
