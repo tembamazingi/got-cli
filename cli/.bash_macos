@@ -1,6 +1,9 @@
-######################### Mac OS X Specific #########################
+######################### Mac OS Specific #########################
+alias cash='sudo rm -rf /Library/Caches/*'
 alias @!='dscacheutil -flushcache'
-alias osx='sw_vers'
+alias mac?='sw_vers'
+alias mac??='uname -m'
+
 alias xv='/usr/bin/xcodebuild -version'
 alias wall='killall Dock'
 
