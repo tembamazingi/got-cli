@@ -22,7 +22,7 @@ $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/maste
 Once Homebrew is installed, install the following packages (these are essential):
 
 ```
-$ brew install git ansible
+$ brew install git
 ```
 
 Other recommended packages you may want to install via Homebrew:
