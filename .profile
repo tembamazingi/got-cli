@@ -1,5 +1,6 @@
-# INIT SCRIPT FOR STARSHIP
+# INIT SCRIPT FOR STARSHIP AND HOMEBREW
 eval "$(starship init bash)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # SET LOCALE.
 export LANGUAGE=en_ZA.UTF-8
@@ -38,20 +39,3 @@ export PATH="/usr/local/sbin:$PATH"
 [[ -f "$HOME/.git-prompt.sh" ]] && source "$HOME/.git-prompt.sh"
 
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
-
-if command -v pyenv 1>/dev/null 2>&1; then
-  export PYENV_ROOT="$HOME/.pyenv"
-  export PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init --path)"
-fi
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/temba/google-cloud-sdk/path.bash.inc' ]; then . '/Users/temba/google-cloud-sdk/path.bash.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/temba/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/temba/google-cloud-sdk/completion.bash.inc'; fi
-
-export N_PREFIX=$HOME/.n
-export PATH=$N_PREFIX/bin:$PATH
-
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"

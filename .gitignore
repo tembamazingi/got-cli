@@ -1,4 +1,3 @@
 .vscode
-auth/
-cli/.hosts
-cli/.cloud
+.hosts
+.cloud

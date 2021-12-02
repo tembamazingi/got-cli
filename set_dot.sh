@@ -3,7 +3,7 @@ OS="$(uname -s)"
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 dotfiles='.git-prompt.sh .gitexcludes'
-dotfiles="$dotfiles .bash_aliases .bash_aliases_code .bash_aliases_git .bash_functions .bash_profile";
+dotfiles="$dotfiles .bash_aliases .bash_aliases_code .bash_aliases_git .bash_functions .profile";
 [[ "$OS" = "Darwin" ]] && dotfiles="$dotfiles .bash_macos";
 
 for dotfile in $dotfiles
