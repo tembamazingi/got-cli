@@ -1,11 +1,10 @@
 ######################### RELOAD SHELL, BASH PROFILE  #########################
 alias r!='exec $SHELL -l'
-[[ ! -L  "$HOME/.bash_profile" ]] && alias r.='source ~/.bashrc' || alias r.='source ~/.bash_profile'
+[[ ! -L  "$HOME/.profile" ]] && alias r.='source ~/.bashrc' || alias r.='source ~/.profile'
 
 ######################### ALL PURPOSE #########################
 alias ..='cd ..'
-alias *='atom -n .'
-alias **='code -n .'
+alias *='code -n .'
 alias @='cat /etc/hosts | grep'
 alias @.='sudo nano /etc/hosts'
 alias a='alias'
