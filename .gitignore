@@ -2,4 +2,3 @@
 auth/
 cli/.hosts
 cli/.cloud
-vm/vagrant/.vagrant

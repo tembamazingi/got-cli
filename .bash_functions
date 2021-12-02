@@ -80,19 +80,9 @@ fn.gg () {
 }
 
 # Git - link local repo to remote origin
-fn.gl () {
+fn.g? () {
 
-  git remote add origin "$1" && git push -u origin main
-
-}
-
-# Git: Find files in the repository that are redundant and not referenced anywhere in the application's code.
-fn.g? ()
-{
-
-  for FILE in $(git ls-files ./$1); do
-      git grep $(basename "$FILE") > /dev/null || echo "would remove $FILE"
-  done
+  git remote add origin "$1" && git branch -M main && git push -u origin main
 
 }
 
@@ -101,5 +91,26 @@ fn.g! ()
 {
 
   git reset --hard $1 && git clean -f && git push -f origin $2
+
+}
+
+# Git: Identify and start tracking all remote branches.
+fn.gf! () {
+
+  remote=origin;
+
+  for brname in `git branch -r | grep $remote | grep -v /main | grep -v /HEAD | awk '{gsub(/^[^\/]+\//,"",$1); print $1}'`; do
+    git branch --track $brname $remote/$brname || true;
+  done
+
+}
+
+# Git: Find files in the repository that are redundant and not referenced anywhere in the application's code.
+fn.gz ()
+{
+
+  for FILE in $(git ls-files ./$1); do
+      git grep $(basename "$FILE") > /dev/null || echo "would remove $FILE"
+  done
 
 }

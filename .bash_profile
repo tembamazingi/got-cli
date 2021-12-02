@@ -39,12 +39,10 @@ export PATH="/usr/local/sbin:$PATH"
 
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
+  export PYENV_ROOT="$HOME/.pyenv"
+  export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init --path)"
 fi
 
 # The next line updates PATH for the Google Cloud SDK.
@@ -52,3 +50,8 @@ if [ -f '/Users/temba/google-cloud-sdk/path.bash.inc' ]; then . '/Users/temba/go
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/temba/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/temba/google-cloud-sdk/completion.bash.inc'; fi
+
+export N_PREFIX=$HOME/.n
+export PATH=$N_PREFIX/bin:$PATH
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
