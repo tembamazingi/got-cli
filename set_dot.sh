@@ -6,7 +6,7 @@ done
 
 if [[ $OSTYPE == darwin* ]]; then
 
-	[[ ! -h "$HOME/.macos" ]] && { echo "Linking $PWD/.macos"; ln -s $PWD/.macos $HOME/$dotfile; } || echo "$dotfile already linked.";
+	[[ ! -h "$HOME/.macos" ]] && { echo "Linking $PWD/.macos"; ln -s $PWD/.macos $HOME/.macos; } || echo "$PWD/.macos already linked.";
 
 fi
 
