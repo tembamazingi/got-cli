@@ -13,6 +13,6 @@ $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/
 Once Homebrew is installed, here are some suggestions for packages you may want to install:
 
 ```
-$ brew install azure-cli brave-browser firefox git starship curl wget htop-osx sqlite tree youtube-dl
+$ brew install azure-cli brave-browser firefox git gh starship curl wget htop-osx sqlite tree youtube-dl
 $ brew install --cask iterm2 raycast miro slack spotify zoom
 ```

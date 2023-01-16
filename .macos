@@ -1,0 +1,21 @@
+######################### MACOS SPECIFIC #########################
+alias cache='sudo rm -rf /Library/Caches/*'
+alias dnscache='dscacheutil -flushcache'
+alias mac='sw_vers'
+alias mac..='uname -m'
+
+alias xv='/usr/bin/xcodebuild -version'
+alias wall='killall Dock'
+
+# HOMEBREW
+alias b.='brew install'
+alias b:z='brew uninstall'
+alias b:f='brew search'
+alias b:*='brew update'
+alias b:i='brew info'
+alias b:c='brew cleanup'
+alias b:dr='brew doctor'
+alias b:l='brew list'
+alias b:o='brew outdated'
+alias b:u.='brew upgrade'
+# END OF FILE

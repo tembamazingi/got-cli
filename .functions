@@ -19,7 +19,7 @@ fn.a () {
 }
 
 # Archives - Extract
-fn.a! () {
+fn.a.. () {
 
   if [ $# -lt 1 ]
   then
@@ -64,14 +64,6 @@ fn.d (){
 
 }
 
-# Functions: Introspection - list the available functions
-fn.l () {
-
-  local functionlist=`compgen -A function | grep fn.`; # Get function list
-  echo -e "$functionlist \n"
-
-}
-
 # Git - config
 
 fn.gc () {
@@ -81,14 +73,14 @@ fn.gc () {
 }
 
 # Git - link local repo to remote origin
-fn.g? () {
+fn.gr () {
 
   git remote add origin "$1" && git branch -M main && git push -u origin main
 
 }
 
 # Git: Revert both the local and remote to a previous working commit.
-fn.g! ()
+fn.gz ()
 {
 
   git reset --hard $1 && git clean -f && git push -f origin $2
@@ -96,7 +88,7 @@ fn.g! ()
 }
 
 # Git: Identify and start tracking all remote branches.
-fn.gf! () {
+fn.gb () {
 
   remote=origin;
 
