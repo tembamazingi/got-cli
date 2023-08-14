@@ -1,5 +1,5 @@
-# FIG PRE BLOCK. KEEP AT THE TOP OF THIS FILE.
-[[ -f "$HOME/.fig/shell/profile.pre.bash" ]] && builtin source "$HOME/.fig/shell/profile.pre.bash"
+# Fig pre block. Keep at the top of this file.
+[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
 
 # LOAD ALL-PURPOSE ALIASES.
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
@@ -18,9 +18,6 @@
 
 # LOAD MAC-SPECIFIC ALIASES.
 [[ -f "$HOME/.macos" ]] && source "$HOME/.macos"
-
-# JETBRAINS TOOLBOX.
-export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
 
 # HISTORY SIZE.
 export HISTFILESIZE=5000000
@@ -49,7 +46,7 @@ eval "$(starship init zsh)"
 source "$(brew --prefix asdf)/libexec/asdf.sh"
 eval "$(asdf exec direnv hook zsh)"
 
-# Fig post block. Keep at the bottom of this file.
-[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
 source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
 
+# Fig post block. Keep at the bottom of this file.
+[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
