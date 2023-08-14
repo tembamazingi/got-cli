@@ -1,5 +1,11 @@
+# List all custom functions
+.fn () {
+
+  print -l ${(ok)functions[(I).*]}
+
+}
 # Archives - create new
-fn.a () {
+.fn:a () {
 
   if [ "$#" -ne 0 ] ; then
     FILE="$1"
@@ -19,7 +25,7 @@ fn.a () {
 }
 
 # Archives - Extract
-fn.a.. () {
+.fn:a:x () {
 
   if [ $# -lt 1 ]
   then
@@ -49,7 +55,7 @@ fn.a.. () {
 }
 
 # Files/Folders: Make folder and enter
-fn.d (){
+.fn:d (){
 
   if [ -f "$1" ] ; then
     echo "File $1 exists~"
@@ -65,30 +71,38 @@ fn.d (){
 }
 
 # Git - config
-
-fn.gc () {
+.fn:g:cnf () {
 
   git config --global user.name "$1" && git config --global user.email "$2"
 
 }
 
 # Git - link local repo to remote origin
-fn.gr () {
+.fn:g:ro () {
 
   git remote add origin "$1" && git branch -M main && git push -u origin main
 
 }
 
 # Git: Revert both the local and remote to a previous working commit.
-fn.gz ()
+.fn:g:rv ()
 {
 
   git reset --hard $1 && git clean -f && git push -f origin $2
 
 }
 
+# Git: What changed in the last X days?
+.fn:g:ch ()
+{
+
+  git whatchanged --abbrev-commit --since='$1'
+
+}
+
+
 # Git: Identify and start tracking all remote branches.
-fn.gb () {
+.fn:g:rb () {
 
   remote=origin;
 
@@ -99,11 +113,26 @@ fn.gb () {
 }
 
 # Git: Find files in the repository that are redundant and not referenced anywhere in the application's code.
-fn.gz ()
-{
+.fn:g:clean () {
 
+  # Loop through all files in the specified directory
   for FILE in $(git ls-files ./$1); do
-      git grep $(basename "$FILE") > /dev/null || echo "would remove $FILE"
+      # Check if the file is referenced anywhere in the application's code
+      git grep $(basename "$FILE") > /dev/null || echo "$FILE is not referenced anywhere in the application's code and can probably be removed."
   done
 
+}
+
+# Git: Delete stale branches that have already been merged into the main branch.
+.fn:g:clean-br () {
+
+  for k in $(git branch --format="%(refname:short)" --merged main); do 
+    if [[ $(git log -1 --since='9 month ago' -s $k |wc -l)==0 ]]; then
+      git log -1 --date=relative --oneline --pretty="%C(red)[Date: %ad]%C(cyan) <=> Last Commit: %C(yellow)%s" $k
+      git branch -d $k
+      git push --delete origin $k
+      echo "\n"
+    fi
+  done
+  
 }
