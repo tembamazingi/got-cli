@@ -1,7 +1,5 @@
-######################### RELOAD SHELL, PROFILE  #########################
 alias r='exec $SHELL -l'
 alias r.='source ~/.zshrc'
-######################### ALL PURPOSE #########################
 alias ..='cd ..'
 alias a='alias'
 alias af='alias | grep'
