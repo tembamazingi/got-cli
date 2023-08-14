@@ -3,7 +3,7 @@ alias cache='sudo rm -rf /Library/Caches/*'
 alias dnscache='dscacheutil -flushcache'
 alias mac='sw_vers'
 alias mac..='uname -m'
-
+alias xc='sudo xcode-select --install'
 alias xv='/usr/bin/xcodebuild -version'
 alias wall='killall Dock'
 
