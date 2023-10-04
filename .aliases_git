@@ -1,9 +1,8 @@
 ######################### GIT ALIASES #########################
-alias g:n='git init && > .gitignore'
-alias g:r='git remote -v'
-alias g:r.='git remote add origin'
-alias g:rp='git remote prune origin'
-alias g:rz='git remote remove origin'
+alias g:n='git init && touch .gitignore'
+alias g:r=gremote
+alias g:v=gitstash
+
 alias g:a='git add '
 alias g:a.='git add .'
 alias g:b='git branch'
@@ -39,10 +38,6 @@ alias g:psn='git push -u origin main'
 alias g:ps.='this_branch=$(git rev-parse --abbrev-ref HEAD); git push --set-upstream origin $this_branch'
 alias g:psz='git push origin --delete'
 alias g:s='git status'
-alias g:sz='git restore'
+alias g:sr='git restore'
 alias g:un='git rm --cached'
-alias g:v.='git stash'
-alias g:va='git stash apply'
-alias g:vc='git stash clear'
-alias g:v='git stash list'
 # END OF FILE

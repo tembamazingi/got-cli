@@ -136,3 +136,27 @@
   done
   
 }
+
+# Function to manage git stashes
+function gstash() {
+    action = $1
+    case "$action" in
+        "s") git stash ;;
+        "a") git stash apply ;;
+        "c") git stash clear ;;
+        "l") git stash list ;;
+        *) echo "Invalid action. Available actions: 's' <=> save, 'a' <=> apply, 'c' <=> clear, 'l' <=> list" ;;
+    esac
+}
+
+# Function to manage git remotes
+function gremote() {
+    action=$1
+    case "$action" in
+        "v") git remote -v ;;
+        "a") git remote add origin ;;
+        "p") git remote prune origin ;;
+        "r") git remote remove origin ;;
+        *) echo "Invalid action. Available actions: 'v' <=> show, 'a' <=> add, 'p' <=> prune, 'r' <=> remove" ;;
+    esac
+}
