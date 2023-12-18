@@ -93,10 +93,10 @@
 }
 
 # Git: What changed in the last X days?
-.fn:g:ch ()
+.fn:g:wch ()
 {
 
-  git whatchanged --abbrev-commit --since='$1'
+  git whatchanged --abbrev-commit --since="$1"
 
 }
 
@@ -124,14 +124,14 @@
 }
 
 # Git: Delete stale branches that have already been merged into the main branch.
-.fn:g:clean-br () {
+.fn:g:clean:br () {
 
   for k in $(git branch --format="%(refname:short)" --merged main); do 
-    if [[ $(git log -1 --since='9 month ago' -s $k |wc -l)==0 ]]; then
+    if [[ $(git log -1 --since='9 months ago' -s $k |wc -l)==0 ]]; then
       git log -1 --date=relative --oneline --pretty="%C(red)[Date: %ad]%C(cyan) <=> Last Commit: %C(yellow)%s" $k
-      git branch -d $k
-      git push --delete origin $k
-      echo "\n"
+      #git branch -d $k
+      #git push --delete origin $k
+      #echo "\n"
     fi
   done
   
