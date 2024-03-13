@@ -1,6 +1,3 @@
-# Fig pre block. Keep at the top of this file.
-[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
-
 # LOAD ALL-PURPOSE ALIASES.
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
@@ -47,6 +44,3 @@ source "$(brew --prefix asdf)/libexec/asdf.sh"
 eval "$(asdf exec direnv hook zsh)"
 
 source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
-
-# Fig post block. Keep at the bottom of this file.
-[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
