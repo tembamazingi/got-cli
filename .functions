@@ -139,7 +139,7 @@
 
 # Function to manage git stashes
 function gstash() {
-    action = $1
+    action=$1
     case "$action" in
         "s") git stash ;;
         "a") git stash apply ;;
