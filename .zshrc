@@ -7,6 +7,9 @@
 # LOAD GIT ALIASES.
 [[ -f "$HOME/.aliases_git" ]] && source "$HOME/.aliases_git"
 
+# LOAD RUNTIME ALIASES.
+[[ -f "$HOME/.aliases_runtimes" ]] && source "$HOME/.aliases_runtimes"
+
 # LOAD FUNCTIONS.
 [[ -f "$HOME/.functions" ]] && source "$HOME/.functions"
 
@@ -24,7 +27,7 @@ export HISTFILE=~/.histfile
 
 # APPEND TO HISTORY IMMEDIATELY AND ADD TIMESTAMP TO ENTRIES.
 setopt appendhistory
-setopt INC_APPEND_HISTORY  
+setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 export HISTTIMEFORMAT="[%F %T] "
 setopt EXTENDED_HISTORY
@@ -35,12 +38,12 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 
+export HOMEBREW_PREFIX=/opt/homebrew
 # INIT SCRIPTS FOR HOMEBREW AND STARSHIP
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 eval "$(starship init zsh)"
 
 source "$(brew --prefix asdf)/libexec/asdf.sh"
-eval "$(asdf exec direnv hook zsh)"
-
 source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
+eval "$(asdf exec direnv hook zsh)"
