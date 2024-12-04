@@ -1,8 +1,8 @@
 ######################### MACOS SPECIFIC #########################
-alias cache='sudo rm -rf /Library/Caches/*'
-alias dnscache='dscacheutil -flushcache'
+alias z_cache='sudo rm -rf /Library/Caches/*'
+alias z_dns='dscacheutil -flushcache'
 alias mac='sw_vers'
-alias mac..='uname -m'
+alias mac_='uname -m'
 alias xc='sudo xcode-select --install'
 alias xv='/usr/bin/xcodebuild -version'
 alias wall='killall Dock'
