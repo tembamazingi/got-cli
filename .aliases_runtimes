@@ -1,0 +1,2 @@
+alias as:dir:i='asdf direnv install'
+alias as:pl:u.='asdf plugin update --all'
