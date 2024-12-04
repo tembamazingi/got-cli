@@ -1,23 +1,23 @@
 #!/bin/zsh
-for dotfile in .aliases .aliases_code .aliases_git .functions .git-prompt.sh .gitexcludes .zprofile .zshrc;
+for dotfile in .aliases .aliases_code .aliases_git .aliases_runtimes .functions .git-prompt.sh .gitexcludes .zprofile .zshrc;
 do
 	if [[ ! -h "$HOME/$dotfile" ]]; then
-		echo "Linking $PWD/$dotfile"
+		echo -e "\nLinking $PWD/$dotfile"
 		ln -s $PWD/$dotfile $HOME/$dotfile
 	else
-		echo "$dotfile already linked."
+		echo -e "\n$dotfile already linked."
 	fi
 done
 
 if [[ $OSTYPE == darwin* ]]; then
 	if [[ ! -h "$HOME/.macos" ]]; then
-		echo "Linking $PWD/.macos"
+		echo -e "\nLinking $PWD/.macos"
 		ln -s $PWD/.macos $HOME/.macos
 	else
-		echo "$PWD/.macos already linked."
+		echo -e "\n$PWD/.macos already linked."
 	fi
 fi
 
 exec $SHELL -l
-echo "Done: dotfiles in place."
+echo -e "\nDone: dotfiles in place."
 # END OF FILE
