@@ -18,4 +18,8 @@ alias b:l='brew list'
 alias b:o='brew outdated'
 alias b:u.='brew upgrade'
 alias b:u='brew update'
+
+# INIT SCRIPTS FOR HOMEBREW
+export HOMEBREW_PREFIX=/opt/homebrew
+eval "$(/opt/homebrew/bin/brew shellenv)"
 # END OF FILE
