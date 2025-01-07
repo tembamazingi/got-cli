@@ -1,0 +1,16 @@
+if [[ $OSTYPE == darwin* ]]; then
+    echo 'eval "$(/opt/homebrew/bin/mise activate zsh)"' >> ~/.zshrc
+
+    source "$(brew --prefix asdf)/libexec/asdf.sh"
+    source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
+    eval "$(asdf exec direnv hook zsh)"
+else
+    eval "$(~/.local/bin/mise activate zsh)"
+
+    . "$HOME/.asdf/asdf.sh"
+fi
+
+if type pyenv > /dev/null 2>&1; then
+    export PATH=$(pyenv root)/shims:$PATH
+fi
+# END OF FILE
