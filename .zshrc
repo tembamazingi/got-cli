@@ -1,31 +1,10 @@
-# LOAD ALL-PURPOSE ALIASES.
-[[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
-
-# LOAD CODE ALIASES.
-[[ -f "$HOME/.aliases_code" ]] && source "$HOME/.aliases_code"
-
-# LOAD GIT ALIASES.
-[[ -f "$HOME/.aliases_git" ]] && source "$HOME/.aliases_git"
-
-# LOAD RUNTIME ALIASES.
-[[ -f "$HOME/.aliases_runtimes" ]] && source "$HOME/.aliases_runtimes"
-
-# LOAD FUNCTIONS.
-[[ -f "$HOME/.functions" ]] && source "$HOME/.functions"
-
-# LOAD GIT BRANCH INFO (IN WITHIN A REPO).
-[[ -f "$HOME/.git-prompt.sh" ]] && source "$HOME/.git-prompt.sh"
-
-# LOAD MAC-SPECIFIC ALIASES.
-[[ -f "$HOME/.macos" ]] && source "$HOME/.macos"
-
-# HISTORY SIZE.
+# HISTORY SIZE SETTINGS.
 export HISTFILESIZE=5000000
 export HISTSIZE=5000000
 export SAVEHIST=$HISTSIZE
 export HISTFILE=~/.histfile
 
-# APPEND TO HISTORY IMMEDIATELY AND ADD TIMESTAMP TO ENTRIES.
+# APPEND TO HISTORY IMMEDIATELY & ADD TIMESTAMP TO ENTRIES.
 setopt appendhistory
 setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
@@ -38,12 +17,30 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 
-export HOMEBREW_PREFIX=/opt/homebrew
-# INIT SCRIPTS FOR HOMEBREW AND STARSHIP
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# LOAD ALL-PURPOSE ALIASES.
+[[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
+# LOAD GIT BRANCH INFO (IN WITHIN A REPO).
+[[ -f "$HOME/.git-prompt.sh" ]] && source "$HOME/.git-prompt.sh"
+
+# LOAD GIT ALIASES.
+[[ -f "$HOME/.aliases_git" ]] && source "$HOME/.aliases_git"
+
+# LOAD CODE ALIASES.
+[[ -f "$HOME/.aliases_code" ]] && source "$HOME/.aliases_code"
+
+# LOAD RUNTIME ALIASES.
+[[ -f "$HOME/.aliases_runtimes" ]] && source "$HOME/.aliases_runtimes"
+
+# LOAD FUNCTIONS.
+[[ -f "$HOME/.functions" ]] && source "$HOME/.functions"
+
+# LOAD MAC-SPECIFIC ALIASES.
+[[ -f "$HOME/.macos" ]] && source "$HOME/.macos"
+
+# INIT SCRIPTS FOR STARSHIP
 eval "$(starship init zsh)"
 
-source "$(brew --prefix asdf)/libexec/asdf.sh"
-source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
-eval "$(asdf exec direnv hook zsh)"
+# LOAD RUNTIMES.
+[[ -f "$HOME/.runtimes" ]] && source "$HOME/.runtimes"
+# END OF FILE
