@@ -1,5 +1,5 @@
 #!/bin/zsh
-for dotfile in .aliases .aliases_code .aliases_git .aliases_runtimes .functions .git-prompt.sh .gitexcludes .zprofile .zshrc;
+for dotfile in .aliases .aliases_code .aliases_git .aliases_runtimes .functions .git-prompt.sh .gitexcludes .runtimes .zprofile .zshrc;
 do
 	if [[ ! -h "$HOME/$dotfile" ]]; then
 		echo -e "\nLinking $PWD/$dotfile"
