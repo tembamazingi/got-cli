@@ -21,4 +21,8 @@ alias u='cd ..'
 alias xf='rsync -rvzu --progress'
 alias xfd='rsync -rvzu --progress --dry-run'
 alias z='rm -rf'
+
+if [[ $OSTYPE == linux-gnu* ]]; then
+    alias zed='flatpak run dev.zed.Zed'
+fi
 # END OF FILE
