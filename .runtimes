@@ -1,16 +1,21 @@
-if [[ $OSTYPE == darwin* ]]; then
-    echo 'eval "$(/opt/homebrew/bin/mise activate zsh)"' >> ~/.zshrc
-
-    source "$(brew --prefix asdf)/libexec/asdf.sh"
-    source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
-    eval "$(asdf exec direnv hook zsh)"
+if ! [ -x "$(command -v mise)" ];
+then
+    echo "[ info: Mise not found ] if you intend to use Mise, please install it first." ;
 else
-    eval "$(~/.local/bin/mise activate zsh)"
-
-    . "$HOME/.asdf/asdf.sh"
+    eval "$(~/.local/bin/mise activate zsh)" ;
 fi
 
-if type pyenv > /dev/null 2>&1; then
+if ! [ -x "$(command -v asdf)" ];
+then
+    echo "[ info: asdf not found ] if you intend to use asdf, please install it first." ;
+else
+. "$HOME/.asdf/asdf.sh" ;
+fi
+
+if ! [ -x "$(command -v pyenv)" ];
+then
+    echo "[ info: pyenv not found ] if you intend to use pyenv, please install it first." ;
+else
     export PATH=$(pyenv root)/shims:$PATH
 fi
 # END OF FILE
