@@ -18,4 +18,14 @@ then
 else
     export PATH=$(pyenv root)/shims:$PATH
 fi
+
+if ! [ -x "$(command -v orb)" ];
+then
+    echo "[ info: Orbstack not found ] if you intend to use Orbstack, please install it first." ;
+else
+    # Added by OrbStack: command-line tools and integration
+    # This won't be added again if you remove it.
+    source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+fi
+
 # END OF FILE
