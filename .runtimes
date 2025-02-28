@@ -1,6 +1,30 @@
-eval "$(~/.local/bin/mise activate zsh)"
+if ! [ -x "$(command -v mise)" ];
+then
+    echo "[ info: mise not found ] if you intend to use mise, please install it first." ;
+else
+    eval "$(~/.local/bin/mise activate zsh)" ;
+fi
 
-if type pyenv > /dev/null 2>&1; then
+if ! [ -x "$(command -v asdf)" ];
+then
+    echo "[ info: asdf not found ] if you intend to use asdf, please install it first." ;
+else
+. "$HOME/.asdf/asdf.sh" ;
+fi
+
+if ! [ -x "$(command -v pyenv)" ];
+then
+    echo "[ info: pyenv not found ] if you intend to use pyenv, please install it first." ;
+else
     export PATH=$(pyenv root)/shims:$PATH
+fi
+
+if ! [ -x "$(command -v orb)" ];
+then
+    echo "[ info: Orbstack not found ] if you intend to use Orbstack, please install it first." ;
+else
+    # Added by OrbStack: command-line tools and integration
+    # This won't be added again if you remove it.
+    source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 fi
 # END OF FILE

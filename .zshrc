@@ -17,6 +17,11 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 
+export PATH="$HOME/.local/bin:$PATH"
+
+# LOAD RUNTIMES.
+[[ -f "$HOME/.runtimes" ]] && source "$HOME/.runtimes"
+
 # LOAD ALL-PURPOSE ALIASES.
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
@@ -40,7 +45,4 @@ setopt HIST_REDUCE_BLANKS
 
 # INIT SCRIPTS FOR STARSHIP
 eval "$(starship init zsh)"
-
-# LOAD RUNTIMES.
-[[ -f "$HOME/.runtimes" ]] && source "$HOME/.runtimes"
 # END OF FILE
