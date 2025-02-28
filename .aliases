@@ -23,6 +23,7 @@ alias xfd='rsync -rvzu --progress --dry-run'
 alias z='rm -rf'
 
 if [[ $OSTYPE == linux-gnu* ]]; then
+    export ZED_ALLOW_EMULATED_GPU=1 && export DISPLAY=:0
     alias zed='flatpak run dev.zed.Zed'
 fi
 # END OF FILE
