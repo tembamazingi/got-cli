@@ -1,23 +1,23 @@
 #!/bin/zsh
-for dotfile in .aliases .aliases_code .aliases_git .aliases_runtimes .functions .git-prompt.sh .gitexcludes .runtimes .zprofile .zshrc;
-do
-	if [[ ! -h "$HOME/$dotfile" ]]; then
-		echo -e "\nLinking $PWD/$dotfile"
-		ln -s $PWD/$dotfile $HOME/$dotfile
-	else
-		echo -e "\n$dotfile already linked."
-	fi
+dotfiles=(.aliases .aliases_code .aliases_git .aliases_runtimes .functions .git-prompt.sh .gitexcludes .runtimes .zprofile .zshrc)
+
+for dotfile in "${dotfiles[@]}"; do
+    echo "Removing old symlink for $dotfile."
+    unlink "$HOME/$dotfile"
+
+    echo "Linking $PWD/$dotfile to $HOME/$dotfile."
+    ln -sf "$PWD/$dotfile" "$HOME/$dotfile"
 done
 
 if [[ $OSTYPE == darwin* ]]; then
-	if [[ ! -h "$HOME/.macos" ]]; then
-		echo -e "\nLinking $PWD/.macos"
-		ln -s $PWD/.macos $HOME/.macos
-	else
-		echo -e "\n$PWD/.macos already linked."
-	fi
+    echo "Removing old symlink for .macos."
+    unlink "$HOME/.macos"
+
+    echo -e "\nLinking $PWD/.macos"
+    ln -sf "$PWD/.macos" "$HOME/.macos"
 fi
 
 exec $SHELL -l
-echo -e "\nDone: dotfiles in place."
+
+echo -e "\nFinished: dotfiles now in place."
 # END OF FILE
