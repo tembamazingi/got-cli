@@ -126,7 +126,7 @@
 # Git: Delete stale branches that have already been merged into the main branch.
 .fn:g:clean:br () {
 
-  for k in $(git branch --format="%(refname:short)" --merged main); do 
+  for k in $(git branch --format="%(refname:short)" --merged main); do
     if [[ $(git log -1 --since='9 months ago' -s $k |wc -l)==0 ]]; then
       git log -1 --date=relative --oneline --pretty="%C(red)[Date: %ad]%C(cyan) <=> Last Commit: %C(yellow)%s" $k
       #git branch -d $k
@@ -134,7 +134,7 @@
       #echo "\n"
     fi
   done
-  
+
 }
 
 # Function to manage git stashes
@@ -159,4 +159,21 @@ function gremote() {
         "r") git remote remove origin ;;
         *) echo "Invalid action. Available actions: 'v' <=> show, 'a' <=> add, 'p' <=> prune, 'r' <=> remove" ;;
     esac
+}
+
+function gbranch() {
+  local branch_name="$1"
+  local remote_branch="${2:-local}" # Default to local if not specified
+
+  if [ -z "$branch_name" ]; then
+    echo "Usage: g_bn <branch_name> [remote_branch (default: local)]"
+    return 1
+  fi
+
+  git checkout -b "$branch_name"
+
+  if [ "$remote_branch" != "local" ]; then
+    git push origin "HEAD:$branch_name"
+    git branch --set-upstream-to=origin/"$branch_name" "$branch_name"
+  fi
 }
