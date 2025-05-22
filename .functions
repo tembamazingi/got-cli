@@ -101,16 +101,57 @@
 }
 
 
-# Git: Identify and start tracking all remote branches.
-.fn:g:rb () {
+# Git: Identify all untracked remote branches.
+.fn:g:br () {
+  
+  remote=origin;
+
+  # Get all remote branches
+  remote_branches=$(git branch -r | grep $remote | grep -v /main | grep -v /HEAD | awk '{gsub(/^[^\/]+\//,"",$1); print $1}')
+  
+  # Get all locally tracked branches
+  tracked_branches=$(git branch -vv | grep "\[$remote" | awk '{print $1}')
+  
+  echo -e 'Remote branches not tracked locally:'
+  echo -e '-----------------------------------\n'
+  
+  found_untracked=false
+  
+  for brname in $remote_branches; do
+    # Check if branch is already tracked locally
+    if ! echo "$tracked_branches" | grep -q "^$brname$"; then
+      echo "$brname:"
+      echo "  git branch --track $brname $remote/$brname"
+      found_untracked=true
+    fi
+  done
+  
+  if [ "$found_untracked" = false ]; then
+    echo "All remote branches are already tracked locally."
+  fi
+
+}
+
+# Git: create local tracking branches for all untracked remote branches.
+.fn:g:br:t () {
 
   remote=origin;
 
-  for brname in `git branch -r | grep $remote | grep -v /main | grep -v /HEAD | awk '{gsub(/^[^\/]+\//,"",$1); print $1}'`; do
-    git branch --track $brname $remote/$brname || true;
+  # Get all remote branches
+  remote_branches=$(git branch -r | grep $remote | grep -v /main | grep -v /HEAD | awk '{gsub(/^[^\/]+\//,"",$1); print $1}')
+    
+  for brname in $remote_branches; do
+    # Check if branch already exists locally   
+    if ! git show-ref -q --heads $brname; then
+      echo "Tracking remote branch: $brname"
+      git branch --track $brname $remote/$brname && git pull;
+    else
+      echo "Branch $brname already exists locally."
+    fi
   done
-
 }
+
+
 
 # Git: Find files in the repository that are redundant and not referenced anywhere in the application's code.
 .fn:g:clean () {
@@ -129,9 +170,6 @@
   for k in $(git branch --format="%(refname:short)" --merged main); do
     if [[ $(git log -1 --since='9 months ago' -s $k |wc -l)==0 ]]; then
       git log -1 --date=relative --oneline --pretty="%C(red)[Date: %ad]%C(cyan) <=> Last Commit: %C(yellow)%s" $k
-      #git branch -d $k
-      #git push --delete origin $k
-      #echo "\n"
     fi
   done
 
@@ -166,7 +204,7 @@ function gbranch() {
   local remote_branch="${2:-local}" # Default to local if not specified
 
   if [ -z "$branch_name" ]; then
-    echo "Usage: g_bn <branch_name> [remote_branch (default: local)]"
+    echo "Usage: g:bn <branch_name> [remote_branch (default: local)]"
     return 1
   fi
 

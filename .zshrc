@@ -3,6 +3,9 @@ export HISTFILESIZE=5000000
 export HISTSIZE=5000000
 export SAVEHIST=$HISTSIZE
 export HISTFILE=~/.histfile
+export CLICOLOR=1
+export TERM=xterm-256color
+
 
 # APPEND TO HISTORY IMMEDIATELY & ADD TIMESTAMP TO ENTRIES.
 setopt appendhistory
@@ -42,6 +45,12 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # LOAD MAC-SPECIFIC ALIASES.
 [[ -f "$HOME/.macos" ]] && source "$HOME/.macos"
+
+# https://github.com/Homebrew/homebrew-command-not-found/
+HB_CNF_HANDLER="$(brew --repository)/Library/Taps/homebrew/homebrew-command-not-found/handler.sh"
+if [ -f "$HB_CNF_HANDLER" ]; then
+source "$HB_CNF_HANDLER";
+fi
 
 # INIT SCRIPTS FOR STARSHIP
 eval "$(starship init zsh)"
