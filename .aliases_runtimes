@@ -1,4 +1,4 @@
 ######################### MISE #########################
-alias m:dr='mise doctor'
-alias m.='mise install'
-alias m:u:='mise self-update'
+alias 'm:dr'='mise doctor'
+alias 'm.'='mise install'
+alias 'm:u.'='mise self-update'

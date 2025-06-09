@@ -6,22 +6,31 @@
 }
 # Archives - create new
 .fn:a () {
-
-  if [ "$#" -ne 0 ] ; then
-    FILE="$1"
-    case "$FILE" in
-      *.tar.bz2|*.tbz2) shift && tar cvjf "$FILE" $* ;;
-      *.tar.gz|*.tgz)   shift && tar cvzf "$FILE" $* ;;
-      *.tar)            shift && tar cvf "$FILE" $* ;;
-      *.zip)            shift && zip -r "$FILE" $* ;;
-      *.rar)            shift && rar "$FILE" $* ;;
-      *.7z)             shift && 7zr a "$FILE" $* ;;
-      *)                echo "'$1' cannot be squeezed via squeeze()" ;;
-    esac
-  else
-    echo "usage: squeeze [file] [contents]"
+  if [ "$#" -lt 2 ] ; then
+    echo "usage: .fn:a [archive_file] [files/folders...]"
+    return 1
   fi
-
+  
+  FILE="$1"
+  shift
+  
+  # Check if source files exist
+  for item in "$@"; do
+    if [ ! -e "$item" ]; then
+      echo "Error: '$item' does not exist"
+      return 1
+    fi
+  done
+  
+  case "$FILE" in
+    *.tar.bz2|*.tbz2) tar cvjf "$FILE" "$@" ;;
+    *.tar.gz|*.tgz)   tar cvzf "$FILE" "$@" ;;
+    *.tar)            tar cvf "$FILE" "$@" ;;
+    *.zip)            zip -r "$FILE" "$@" ;;
+    *.rar)            rar a "$FILE" "$@" ;;
+    *.7z)             7z a "$FILE" "$@" ;;
+    *)                echo "'$FILE' format not supported" ;;
+  esac
 }
 
 # Archives - Extract
@@ -133,7 +142,7 @@
 }
 
 # Git: create local tracking branches for all untracked remote branches.
-.fn:g:br:t () {
+.fn:g:br. () {
 
   remote=origin;
 

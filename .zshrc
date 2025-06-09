@@ -34,9 +34,6 @@ export PATH="$HOME/.local/bin:$PATH"
 # LOAD GIT ALIASES.
 [[ -f "$HOME/.aliases_git" ]] && source "$HOME/.aliases_git"
 
-# LOAD CODE ALIASES.
-[[ -f "$HOME/.aliases_code" ]] && source "$HOME/.aliases_code"
-
 # LOAD RUNTIME ALIASES.
 [[ -f "$HOME/.aliases_runtimes" ]] && source "$HOME/.aliases_runtimes"
 
@@ -45,6 +42,12 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # LOAD MAC-SPECIFIC ALIASES.
 [[ -f "$HOME/.macos" ]] && source "$HOME/.macos"
+
+# LOAD ALIASES FOR CLOUD SERVICES.
+[[ -f "$HOME/.cloud" ]] && source "$HOME/.cloud"
+
+# LOAD ALIASES FOR AI AGENTS.
+[[ -f "$HOME/.agent" ]] && source "$HOME/.agent"
 
 # https://github.com/Homebrew/homebrew-command-not-found/
 HB_CNF_HANDLER="$(brew --repository)/Library/Taps/homebrew/homebrew-command-not-found/handler.sh"

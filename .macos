@@ -1,23 +1,24 @@
 ######################### MACOS SPECIFIC #########################
-alias z_cache='sudo rm -rf /Library/Caches/*'
-alias z_dns='dscacheutil -flushcache'
-alias mac='sw_vers'
-alias mac_='uname -m'
-alias xc='sudo xcode-select --install'
-alias xv='/usr/bin/xcodebuild -version'
-alias wall='killall Dock'
+alias 'z_cache'='sudo rm -rf /Library/Caches/*'
+alias 'z_dns'='dscacheutil -flushcache'
+alias 'mac'='sw_vers'
+alias 'mac_'='uname -m'
+alias 'xc'='sudo xcode-select --install'
+alias 'xv'='/usr/bin/xcodebuild -version'
+alias 'wall'='killall Dock'
 
 # HOMEBREW
-alias b.='brew install'
-alias b:z='brew uninstall'
-alias b:f='brew search'
-alias b:i='brew info'
-alias b:c='brew cleanup'
-alias b:dr='brew doctor'
-alias b:l='brew list'
-alias b:o='brew outdated'
-alias b:u.='brew upgrade'
-alias b:u='brew update'
+alias 'b.'='brew install'
+alias 'b:f'='brew search'
+alias 'b:c'='brew cleanup'
+alias 'b:dr'='brew doctor'
+alias 'b:i'='brew info'
+alias 'b:l'='brew list'
+alias 'b:o'='brew outdated'
+alias 'b:z'='brew uninstall'
+alias 'b:u'='brew update'
+alias 'b:u.'='brew upgrade'
+
 
 # INIT SCRIPTS FOR HOMEBREW
 export HOMEBREW_PREFIX=/opt/homebrew

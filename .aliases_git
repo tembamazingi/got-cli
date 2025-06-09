@@ -1,54 +1,55 @@
 ######################### GIT ALIASES #########################
-alias g:n='git init && touch .gitignore'
-alias g:r=gremote
-alias g:v=gstash
-alias g:bn=gbranch
+alias 'g:r'=gremote
+alias 'g:v'=gstash
+alias 'g:bn'=gbranch
 
-alias g:a='git add '
-alias g:a:='git add .'
+alias 'g:n'='git init && touch .gitignore'
 
-alias g:b='git branch'
-alias g:b:='git branch -a'
+alias 'g:a'='git add '
+alias 'g:a_'='git add .'
 
-alias g:bd='git branch -d'
-alias g:bd:='git branch -D'
+alias 'g:b'='git branch'
+alias 'g:b_'="git for-each-ref --sort=-committerdate --format='%(committerdate:relative)|%(refname:short)' refs/heads/ | column -s '|' -t"
+alias 'g:ba'='git branch -a'
+alias 'g:bd'='git branch -d'
+alias 'g:bd_'='git branch -D'
 
-alias g:c='git commit'
-alias g:c:='git commit --amend'
+alias 'g:c'='git commit'
+alias 'g:c_'='git commit --amend'
 
-alias g:co='git checkout'
-alias g:cd='git checkout dev'
+alias 'g:co'='git checkout'
+alias 'g:cd'='git checkout dev'
+alias 'g:cm'='git checkout main'
 
-alias g:cl='git clone'
-alias g:cm='git checkout main'
+alias 'g:cl'='git clone'
 
-alias g:dw='git diff --color-words'
-alias g:dw:='git diff --color-words main dev'
+alias 'g:dw'='git diff --color-words'
+alias 'g:dw_'='git diff --color-words main dev'
 
-alias g:fo='git fetch origin'
+alias 'g:fo'='git fetch origin'
 
-alias g:i='git update-index --assume-unchanged'
-alias g:i_='git update-index --no-assume-unchanged'
+alias 'g:i'='git update-index --assume-unchanged'
+alias 'g:i_'='git update-index --no-assume-unchanged'
 
-alias g:l='git log --oneline'
-alias g:lb="git for-each-ref --sort=-committerdate --format='%(committerdate:relative)|%(refname:short)' refs/heads/ | column -s '|' -t"
-alias g:lg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
-alias g:lp='git log -p -w'
-alias g:ls="git log --stat --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+alias 'g:l'='git log --oneline'
+alias 'g:lg'="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+alias 'g:lp'='git log -p -w'
+alias 'g:ls'="git log --stat --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
 
-alias g:mm='git merge main'
-alias g:mm_='git merge origin/main'
-alias g:md='git merge dev'
-alias g:md:='git merge origin/dev'
+alias 'g:mm'='git merge main'
+alias 'g:mm_'='git merge origin/main'
+alias 'g:md'='git merge dev'
+alias 'g:md_'='git merge origin/dev'
 
-alias g:pl='git pull'
-alias g:ps='git push'
-alias g:psn='git push -u origin main'
+alias 'g:pl'='git fetch && git merge'
 
-alias g:ps:='this_branch=$(git rev-parse --abbrev-ref HEAD); git push --set-upstream origin $this_branch'
-alias g:psz='git push origin --delete'
+alias 'g:ps'='git push'
+alias 'g:ps.'='git push -u origin main'
+alias 'g:ps_'='this_branch=$(git rev-parse --abbrev-ref HEAD); git push --set-upstream origin $this_branch'
+alias 'g:ps:'='git push origin --delete'
 
-alias g:s='git status'
-alias g:sr='git restore'
-alias g:un='git rm --cached'
+alias 'g:s'='git status'
+alias 'g:s_'='git restore'
+
+alias 'g:un'='git rm --cached'
 # END OF FILE
