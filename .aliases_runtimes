@@ -1,4 +1,5 @@
 ######################### MISE #########################
 alias 'm:dr'='mise doctor'
 alias 'm.'='mise install'
+alias 'm_'='mise trust'
 alias 'm:u.'='mise self-update'

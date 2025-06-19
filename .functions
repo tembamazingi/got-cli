@@ -224,3 +224,12 @@ function gbranch() {
     git branch --set-upstream-to=origin/"$branch_name" "$branch_name"
   fi
 }
+
+function f:c:mp4() {
+    for input_file in *.mov; do
+        if [ -f "$input_file" ]; then
+            output_file="${input_file%.mov}.mp4"
+            ffmpeg -i "$input_file" -c:v libx264 -c:a aac -vf format=yuv420p -movflags +faststart "$output_file"
+        fi
+    done
+}
