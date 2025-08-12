@@ -20,6 +20,7 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 
+PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 # LOAD RUNTIMES.
@@ -54,6 +55,8 @@ HB_CNF_HANDLER="$(brew --repository)/Library/Taps/homebrew/homebrew-command-not-
 if [ -f "$HB_CNF_HANDLER" ]; then
 source "$HB_CNF_HANDLER";
 fi
+
+export NODE_EXTRA_CA_CERTS="$HOME/.config/certificates/zscaler-root.pem"
 
 # INIT SCRIPTS FOR STARSHIP
 eval "$(starship init zsh)"
