@@ -110,36 +110,7 @@
 }
 
 
-# Git: Identify all untracked remote branches.
-.fn:g:br () {
-  
-  remote=origin;
 
-  # Get all remote branches
-  remote_branches=$(git branch -r | grep $remote | grep -v /main | grep -v /HEAD | awk '{gsub(/^[^\/]+\//,"",$1); print $1}')
-  
-  # Get all locally tracked branches
-  tracked_branches=$(git branch -vv | grep "\[$remote" | awk '{print $1}')
-  
-  echo -e 'Remote branches not tracked locally:'
-  echo -e '-----------------------------------\n'
-  
-  found_untracked=false
-  
-  for brname in $remote_branches; do
-    # Check if branch is already tracked locally
-    if ! echo "$tracked_branches" | grep -q "^$brname$"; then
-      echo "$brname:"
-      echo "  git branch --track $brname $remote/$brname"
-      found_untracked=true
-    fi
-  done
-  
-  if [ "$found_untracked" = false ]; then
-    echo "All remote branches are already tracked locally."
-  fi
-
-}
 
 # Git: create local tracking branches for all untracked remote branches.
 .fn:g:br. () {
@@ -153,14 +124,18 @@
     # Check if branch already exists locally   
     if ! git show-ref -q --heads $brname; then
       echo "Tracking remote branch: $brname"
-      git branch --track $brname $remote/$brname && git pull;
+      git branch --track $brname $remote/$brname
+      echo "Checking out and pulling branch: $brname"
+      git checkout $brname && git pull
     else
       echo "Branch $brname already exists locally."
     fi
   done
+  
+  # Return to master branch
+  echo "Returning to master branch"
+  git checkout master
 }
-
-
 
 # Git: Find files in the repository that are redundant and not referenced anywhere in the application's code.
 .fn:g:clean () {
@@ -225,11 +200,167 @@ function gbranch() {
   fi
 }
 
-function f:c:mp4() {
+# Convert .mov files to .mp4 files
+function .fn:c:mp4() {
     for input_file in *.mov; do
         if [ -f "$input_file" ]; then
             output_file="${input_file%.mov}.mp4"
             ffmpeg -i "$input_file" -c:v libx264 -c:a aac -vf format=yuv420p -movflags +faststart "$output_file"
         fi
     done
+}
+
+# Port management: view/kill/force kill processes running on a specified port
+function port_manager() {
+    if [ -z "$1" ]; then
+        echo "Usage: port_manager <port_number> [action]"
+        echo "Actions:"
+        echo "  c  - Just check what's running (default)"
+        echo "  k   - Kill with confirmation"
+        echo "  z  - Force kill without confirmation"
+        echo ""
+        echo "Examples:"
+        echo "  port_manager 3000"
+        echo "  port_manager 3000 c"
+        echo "  port_manager 3000 k"
+        return 1
+    fi
+    
+    local port=$1
+    local action=${2:-c}
+    
+    # Check if lsof is available
+    if ! command -v lsof &> /dev/null; then
+        echo "Error: lsof command not found. Please install it first."
+        return 1
+    fi
+    
+    echo "Checking port $port..."
+    
+    # Find processes using the port
+    local pids=$(lsof -ti:$port)
+    
+    if [ -z "$pids" ]; then
+        echo "✅ No process found running on port $port"
+        return 0
+    fi
+    
+    # Display process information
+    echo "🔍 Process(es) found on port $port:"
+    echo "----------------------------------------"
+    lsof -i:$port
+    echo "----------------------------------------"
+    
+    # Handle different actions
+    case $action in
+        "c")
+            echo "ℹ️  Use 'port_manager $port k' to terminate these processes"
+            ;;
+        "k"|"z")
+            for pid in $pids; do
+                # Get process info
+                local process_info=$(ps -p $pid -o user=,comm= 2>/dev/null)
+                local process_user=$(echo "$process_info" | awk '{print $1}')
+                local process_name=$(echo "$process_info" | awk '{print $2}')
+                local current_user=$(whoami)
+                
+                if [ -z "$process_info" ]; then
+                    echo "⚠️  Process $pid no longer exists"
+                    continue
+                fi
+                
+                echo "📋 Process $pid: $process_name (owner: $process_user)"
+                
+                # Check permissions
+                if [ "$process_user" != "$current_user" ] && [ "$current_user" != "root" ]; then
+                    echo "⚠️  Warning: Process $pid is owned by $process_user, not $current_user"
+                    echo "   You may need sudo permissions to terminate this process"
+                fi
+                
+                if [ "$action" = "k" ]; then
+                    read -p "❓ Terminate process $pid ($process_name)? [y/N]: " -n 1 -r
+                    echo ""
+                    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                        echo "⏭️  Skipping process $pid"
+                        continue
+                    fi
+                fi
+                
+                echo "🔄 Terminating process $pid ($process_name)..."
+                
+                # Try graceful termination first
+                local need_sudo=false
+                if kill "$pid" 2>/dev/null; then
+                    echo "   Sent SIGTERM to process $pid"
+                    sleep 2  # Give more time for graceful shutdown
+                    
+                    if kill -0 "$pid" 2>/dev/null; then
+                        echo "🔄 Process still running, force killing process $pid..."
+                        if kill -9 "$pid" 2>/dev/null; then
+                            echo "   Sent SIGKILL to process $pid"
+                            sleep 1
+                            if kill -0 "$pid" 2>/dev/null; then
+                                echo "❌ Failed to terminate process $pid (process may be unkillable)"
+                            else
+                                echo "✅ Process $pid forcefully terminated"
+                            fi
+                        else
+                            need_sudo=true
+                        fi
+                    else
+                        echo "✅ Process $pid terminated successfully"
+                    fi
+                else
+                    need_sudo=true
+                fi
+                
+                # Try with sudo if regular kill failed
+                if [ "$need_sudo" = true ]; then
+                    echo "🔐 Attempting to terminate process $pid with elevated privileges..."
+                    if sudo kill "$pid" 2>/dev/null; then
+                        echo "   Sent SIGTERM to process $pid (with sudo)"
+                        sleep 2
+                        
+                        if kill -0 "$pid" 2>/dev/null; then
+                            echo "🔄 Process still running, force killing with sudo..."
+                            if sudo kill -9 "$pid" 2>/dev/null; then
+                                echo "   Sent SIGKILL to process $pid (with sudo)"
+                                sleep 1
+                                if kill -0 "$pid" 2>/dev/null; then
+                                    echo "❌ Failed to terminate process $pid (process may be unkillable)"
+                                else
+                                    echo "✅ Process $pid forcefully terminated (with sudo)"
+                                fi
+                            else
+                                echo "❌ Failed to force kill process $pid even with sudo"
+                            fi
+                        else
+                            echo "✅ Process $pid terminated successfully (with sudo)"
+                        fi
+                    else
+                        echo "❌ Failed to terminate process $pid even with sudo"
+                        echo "   Process may be unkillable or in an uninterruptible state"
+                    fi
+                fi
+            done
+            
+            # Final verification
+            echo ""
+            echo "🔍 Final verification:"
+            local remaining=$(lsof -ti:$port)
+            if [ -z "$remaining" ]; then
+                echo "✅ Port $port is now free!"
+            else
+                echo "⚠️  Some processes still running on port $port:"
+                lsof -i:$port
+                echo ""
+                echo "💡 Some processes may be unkillable if they're in an uninterruptible state"
+            fi
+            ;;
+        *)
+            echo "❌ Unknown action: $action"
+            echo "Valid actions: c, k, z"
+            return 1
+            ;;
+    esac
 }
