@@ -160,7 +160,7 @@
 }
 
 # Function to manage git stashes
-function gstash() {
+function .fn:g:stash() {
     action=$1
     case "$action" in
         "s") git stash ;;
@@ -172,7 +172,7 @@ function gstash() {
 }
 
 # Function to manage git remotes
-function gremote() {
+function .fn:g:remote() {
     action=$1
     case "$action" in
         "v") git remote -v ;;
@@ -183,12 +183,12 @@ function gremote() {
     esac
 }
 
-function gbranch() {
+function .fn:g:branch() {
   local branch_name="$1"
   local remote_branch="${2:-local}" # Default to local if not specified
 
   if [ -z "$branch_name" ]; then
-    echo "Usage: g:bn <branch_name> [remote_branch (default: local)]"
+    echo "Usage: .fn:g:branch <branch_name> [remote_branch (default: local)]"
     return 1
   fi
 
@@ -211,18 +211,18 @@ function .fn:c:mp4() {
 }
 
 # Port management: view/kill/force kill processes running on a specified port
-function port_manager() {
+function .fn:pm() {
     if [ -z "$1" ]; then
-        echo "Usage: port_manager <port_number> [action]"
+        echo "Usage: .fn:pm <port_number> [action]"
         echo "Actions:"
         echo "  c  - Just check what's running (default)"
         echo "  k   - Kill with confirmation"
         echo "  z  - Force kill without confirmation"
         echo ""
         echo "Examples:"
-        echo "  port_manager 3000"
-        echo "  port_manager 3000 c"
-        echo "  port_manager 3000 k"
+        echo "  .fn:pm 3000"
+        echo "  .fn:pm 3000 c"
+        echo "  .fn:pm 3000 k"
         return 1
     fi
     
@@ -254,7 +254,7 @@ function port_manager() {
     # Handle different actions
     case $action in
         "c")
-            echo "ℹ️  Use 'port_manager $port k' to terminate these processes"
+            echo "ℹ️  Use '.fn:pm $port k' to terminate these processes"
             ;;
         "k"|"z")
             for pid in $pids; do
