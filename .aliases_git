@@ -1,7 +1,7 @@
 ######################### GIT ALIASES #########################
-alias 'g:r'='.fn:g:remote'
-alias 'g:v'='.fn:g:stash'
-alias 'g:bn'='.fn:g:branch'
+alias 'g:r'=gremote
+alias 'g:v'=gstash
+alias 'g:bn'=gbranch
 
 alias 'g:n'='git init && touch .gitignore'
 

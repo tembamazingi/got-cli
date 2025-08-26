@@ -110,8 +110,6 @@
 }
 
 
-
-
 # Git: create local tracking branches for all untracked remote branches.
 .fn:g:br. () {
 
@@ -160,7 +158,7 @@
 }
 
 # Function to manage git stashes
-function .fn:g:stash() {
+function gstash() {
     action=$1
     case "$action" in
         "s") git stash ;;
@@ -172,7 +170,7 @@ function .fn:g:stash() {
 }
 
 # Function to manage git remotes
-function .fn:g:remote() {
+function gremote() {
     action=$1
     case "$action" in
         "v") git remote -v ;;
@@ -183,12 +181,12 @@ function .fn:g:remote() {
     esac
 }
 
-function .fn:g:branch() {
+function gbranch() {
   local branch_name="$1"
   local remote_branch="${2:-local}" # Default to local if not specified
 
   if [ -z "$branch_name" ]; then
-    echo "Usage: .fn:g:branch <branch_name> [remote_branch (default: local)]"
+    echo "Usage: g:bn <branch_name> [remote_branch (default: local)]"
     return 1
   fi
 
@@ -200,14 +198,40 @@ function .fn:g:branch() {
   fi
 }
 
-# Convert .mov files to .mp4 files
-function .fn:c:mp4() {
-    for input_file in *.mov; do
-        if [ -f "$input_file" ]; then
+# Convert a single video file between formats: .mov to .mp4 or .mov to .gif
+function .fn:media:c() {
+    if [ $# -ne 2 ]; then
+        echo "Usage: .fn:media:c [input.mov] [mp4|gif]"
+        return 1
+    fi
+
+    input_file="$1"
+    target_format="$2"
+
+    if [ ! -f "$input_file" ]; then
+        echo "Input file not found: $input_file"
+        return 1
+    fi
+
+    case "$target_format" in
+        mp4)
             output_file="${input_file%.mov}.mp4"
             ffmpeg -i "$input_file" -c:v libx264 -c:a aac -vf format=yuv420p -movflags +faststart "$output_file"
-        fi
-    done
+            ;;
+        gif)
+            output_file="${input_file%.mov}.gif"
+            # Generate a palette for better quality GIFs
+            palette="/tmp/palette.png"
+            ffmpeg -y -i "$input_file" -vf fps=10,scale=480:-1:flags=lanczos,palettegen "$palette"
+            ffmpeg -i "$input_file" -i "$palette" -filter_complex "fps=10,scale=480:-1:flags=lanczos[x];[x][1:v]paletteuse" "$output_file"
+            rm -f "$palette"
+            ;;
+        *)
+            echo "Unsupported target format: $target_format"
+            echo "Supported formats: mp4, gif"
+            return 1
+            ;;
+    esac
 }
 
 # Port management: view/kill/force kill processes running on a specified port
@@ -216,150 +240,249 @@ function .fn:pm() {
         echo "Usage: .fn:pm <port_number> [action]"
         echo "Actions:"
         echo "  c  - Just check what's running (default)"
-        echo "  k   - Kill with confirmation"
+        echo "  k  - Kill with confirmation"
         echo "  z  - Force kill without confirmation"
+        echo "  d  - Debug mode (shows detailed information)"
         echo ""
         echo "Examples:"
         echo "  .fn:pm 3000"
         echo "  .fn:pm 3000 c"
         echo "  .fn:pm 3000 k"
+        echo "  .fn:pm 3000 z"
         return 1
     fi
     
     local port=$1
     local action=${2:-c}
+    local debug=false
     
-    # Check if lsof is available
-    if ! command -v lsof &> /dev/null; then
-        echo "Error: lsof command not found. Please install it first."
+    # Enable debug mode if requested
+    if [ "$action" = "d" ]; then
+        debug=true
+        action="c"
+    fi
+    
+    # Validate port number
+    if ! [[ "$port" =~ ^[0-9]+$ ]] || [ "$port" -lt 1 ] || [ "$port" -gt 65535 ]; then
+        echo "❌ Error: Invalid port number '$port'. Must be between 1-65535."
         return 1
     fi
     
-    echo "Checking port $port..."
+    # Check if lsof is available
+    if ! command -v lsof &> /dev/null; then
+        echo "❌ Error: lsof command not found. Please install it first."
+        return 1
+    fi
     
-    # Find processes using the port
-    local pids=$(lsof -ti:$port)
+    echo "🔍 Checking port $port..."
     
-    if [ -z "$pids" ]; then
+    # Find processes using the port with better error handling
+    local pids_raw=$(lsof -ti:$port 2>/dev/null)
+    
+    if [ "$debug" = true ]; then
+        echo "DEBUG: Raw lsof output: '$pids_raw'"
+        echo "DEBUG: lsof command: lsof -ti:$port"
+    fi
+    
+    if [ -z "$pids_raw" ]; then
         echo "✅ No process found running on port $port"
         return 0
+    fi
+    
+    # Clean and validate PIDs
+    local pids=()
+    while read -r pid; do
+        if [[ "$pid" =~ ^[0-9]+$ ]] && [ "$pid" -gt 0 ]; then
+            pids+=("$pid")
+        elif [ "$debug" = true ]; then
+            echo "DEBUG: Skipping invalid PID: '$pid'"
+        fi
+    done <<< "$pids_raw"
+    
+    if [ ${#pids[@]} -eq 0 ]; then
+        echo "❌ No valid process IDs found for port $port"
+        return 1
+    fi
+    
+    if [ "$debug" = true ]; then
+        echo "DEBUG: Valid PIDs found: ${pids[*]}"
+        echo "DEBUG: Number of processes: ${#pids[@]}"
     fi
     
     # Display process information
     echo "🔍 Process(es) found on port $port:"
     echo "----------------------------------------"
-    lsof -i:$port
+    lsof -i:$port 2>/dev/null || echo "Error displaying process details"
     echo "----------------------------------------"
     
     # Handle different actions
     case $action in
         "c")
             echo "ℹ️  Use '.fn:pm $port k' to terminate these processes"
+            if [ "$debug" = true ]; then
+                echo "DEBUG: Would attempt to kill PIDs: ${pids[*]}"
+            fi
             ;;
         "k"|"z")
-            for pid in $pids; do
-                # Get process info
-                local process_info=$(ps -p $pid -o user=,comm= 2>/dev/null)
-                local process_user=$(echo "$process_info" | awk '{print $1}')
-                local process_name=$(echo "$process_info" | awk '{print $2}')
-                local current_user=$(whoami)
+            local killed_count=0
+            local total_count=${#pids[@]}
+            
+            echo "🎯 Attempting to terminate $total_count process(es)..."
+            
+            for pid in "${pids[@]}"; do
+                if [ "$debug" = true ]; then
+                    echo "DEBUG: Processing PID $pid"
+                fi
                 
-                if [ -z "$process_info" ]; then
+                # Verify process still exists
+                if ! kill -0 "$pid" 2>/dev/null; then
                     echo "⚠️  Process $pid no longer exists"
                     continue
+                fi
+                
+                # Get process info with better error handling
+                local process_info=$(ps -p "$pid" -o user=,comm= 2>/dev/null)
+                if [ -z "$process_info" ]; then
+                    echo "⚠️  Cannot get info for process $pid (may have died)"
+                    continue
+                fi
+                
+                local process_user=$(echo "$process_info" | awk '{print $1}' | tr -d ' ')
+                local process_name=$(echo "$process_info" | awk '{print $2}' | tr -d ' ')
+                local current_user=$(whoami)
+                
+                if [ "$debug" = true ]; then
+                    echo "DEBUG: PID=$pid, User=$process_user, Name=$process_name, CurrentUser=$current_user"
                 fi
                 
                 echo "📋 Process $pid: $process_name (owner: $process_user)"
                 
                 # Check permissions
+                local needs_sudo=false
                 if [ "$process_user" != "$current_user" ] && [ "$current_user" != "root" ]; then
                     echo "⚠️  Warning: Process $pid is owned by $process_user, not $current_user"
-                    echo "   You may need sudo permissions to terminate this process"
+                    needs_sudo=true
                 fi
                 
+                # Ask for confirmation if action is 'k'
+                local proceed=true
                 if [ "$action" = "k" ]; then
-                    read -p "❓ Terminate process $pid ($process_name)? [y/N]: " -n 1 -r
-                    echo ""
-                    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                        echo "⏭️  Skipping process $pid"
-                        continue
+                    echo -n "❓ Terminate process $pid ($process_name)? [y/N]: "
+                    read -r reply
+                    if [ "$debug" = true ]; then
+                        echo "DEBUG: User reply: '$reply'"
                     fi
-                fi
-                
-                echo "🔄 Terminating process $pid ($process_name)..."
-                
-                # Try graceful termination first
-                local need_sudo=false
-                if kill "$pid" 2>/dev/null; then
-                    echo "   Sent SIGTERM to process $pid"
-                    sleep 2  # Give more time for graceful shutdown
                     
-                    if kill -0 "$pid" 2>/dev/null; then
-                        echo "🔄 Process still running, force killing process $pid..."
-                        if kill -9 "$pid" 2>/dev/null; then
-                            echo "   Sent SIGKILL to process $pid"
-                            sleep 1
-                            if kill -0 "$pid" 2>/dev/null; then
-                                echo "❌ Failed to terminate process $pid (process may be unkillable)"
-                            else
-                                echo "✅ Process $pid forcefully terminated"
-                            fi
-                        else
-                            need_sudo=true
-                        fi
-                    else
-                        echo "✅ Process $pid terminated successfully"
+                    if [[ ! "$reply" =~ ^[Yy]([Ee][Ss])?$ ]]; then
+                        echo "⏭️  Skipping process $pid"
+                        proceed=false
                     fi
-                else
-                    need_sudo=true
                 fi
                 
-                # Try with sudo if regular kill failed
-                if [ "$need_sudo" = true ]; then
-                    echo "🔐 Attempting to terminate process $pid with elevated privileges..."
-                    if sudo kill "$pid" 2>/dev/null; then
-                        echo "   Sent SIGTERM to process $pid (with sudo)"
-                        sleep 2
+                if [ "$proceed" = true ]; then
+                    echo "🔄 Terminating process $pid ($process_name)..."
+                    
+                    # Try graceful termination first
+                    local success=false
+                    
+                    # Attempt 1: Regular SIGTERM
+                    if [ "$debug" = true ]; then
+                        echo "DEBUG: Attempting SIGTERM on PID $pid"
+                    fi
+                    
+                    if kill "$pid" 2>/dev/null; then
+                        echo "   ✓ Sent SIGTERM to process $pid"
+                        sleep 3  # Give more time for graceful shutdown
                         
-                        if kill -0 "$pid" 2>/dev/null; then
-                            echo "🔄 Process still running, force killing with sudo..."
-                            if sudo kill -9 "$pid" 2>/dev/null; then
-                                echo "   Sent SIGKILL to process $pid (with sudo)"
-                                sleep 1
-                                if kill -0 "$pid" 2>/dev/null; then
-                                    echo "❌ Failed to terminate process $pid (process may be unkillable)"
-                                else
-                                    echo "✅ Process $pid forcefully terminated (with sudo)"
-                                fi
+                        if ! kill -0 "$pid" 2>/dev/null; then
+                            echo "✅ Process $pid terminated successfully"
+                            success=true
+                            killed_count=$((killed_count + 1))
+                        fi
+                    fi
+                    
+                    # Attempt 2: Regular SIGKILL if still running
+                    if [ "$success" = false ] && kill -0 "$pid" 2>/dev/null; then
+                        if [ "$debug" = true ]; then
+                            echo "DEBUG: Process still running, attempting SIGKILL"
+                        fi
+                        
+                        echo "🔄 Process still running, force killing..."
+                        if kill -9 "$pid" 2>/dev/null; then
+                            echo "   ✓ Sent SIGKILL to process $pid"
+                            sleep 2
+                            
+                            if ! kill -0 "$pid" 2>/dev/null; then
+                                echo "✅ Process $pid forcefully terminated"
+                                success=true
+                                killed_count=$((killed_count + 1))
+                            fi
+                        fi
+                    fi
+                    
+                    # Attempt 3: Sudo SIGTERM if regular kill failed
+                    if [ "$success" = false ] && kill -0 "$pid" 2>/dev/null; then
+                        if [ "$debug" = true ]; then
+                            echo "DEBUG: Attempting sudo SIGTERM"
+                        fi
+                        
+                        echo "🔐 Attempting termination with elevated privileges..."
+                        if sudo kill "$pid" 2>/dev/null; then
+                            echo "   ✓ Sent SIGTERM to process $pid (with sudo)"
+                            sleep 3
+                            
+                            if ! kill -0 "$pid" 2>/dev/null; then
+                                echo "✅ Process $pid terminated successfully (with sudo)"
+                                success=true
+                                killed_count=$((killed_count + 1))
+                            fi
+                        fi
+                    fi
+                    
+                    # Attempt 4: Sudo SIGKILL as last resort
+                    if [ "$success" = false ] && kill -0 "$pid" 2>/dev/null; then
+                        if [ "$debug" = true ]; then
+                            echo "DEBUG: Attempting sudo SIGKILL as last resort"
+                        fi
+                        
+                        echo "🔄 Process still running, force killing with sudo..."
+                        if sudo kill -9 "$pid" 2>/dev/null; then
+                            echo "   ✓ Sent SIGKILL to process $pid (with sudo)"
+                            sleep 2
+                            
+                            if ! kill -0 "$pid" 2>/dev/null; then
+                                echo "✅ Process $pid forcefully terminated (with sudo)"
+                                success=true
+                                killed_count=$((killed_count + 1))
                             else
-                                echo "❌ Failed to force kill process $pid even with sudo"
+                                echo "❌ Failed to terminate process $pid (process may be unkillable)"
                             fi
                         else
-                            echo "✅ Process $pid terminated successfully (with sudo)"
+                            echo "❌ Failed to kill process $pid even with sudo"
                         fi
-                    else
-                        echo "❌ Failed to terminate process $pid even with sudo"
-                        echo "   Process may be unkillable or in an uninterruptible state"
                     fi
                 fi
             done
             
-            # Final verification
+            # Final verification and summary
+            echo ""
+            echo "📊 Summary: Successfully terminated $killed_count out of $total_count processes"
             echo ""
             echo "🔍 Final verification:"
-            local remaining=$(lsof -ti:$port)
+            local remaining=$(lsof -ti:$port 2>/dev/null)
             if [ -z "$remaining" ]; then
                 echo "✅ Port $port is now free!"
             else
                 echo "⚠️  Some processes still running on port $port:"
-                lsof -i:$port
+                lsof -i:$port 2>/dev/null
                 echo ""
-                echo "💡 Some processes may be unkillable if they're in an uninterruptible state"
+                echo "💡 Tip: Some processes may be unkillable if they're in an uninterruptible state"
+                echo "   Try '.fn:pm $port d' for debug information"
             fi
             ;;
         *)
-            echo "❌ Unknown action: $action"
-            echo "Valid actions: c, k, z"
+            echo "❌ Unknown action: '$action'"
+            echo "Valid actions: c (check), k (kill with confirmation), z (force kill), d (debug)"
             return 1
             ;;
     esac
