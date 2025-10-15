@@ -1,10 +1,11 @@
 ######################### MISE #########################
+alias 'm_'='mise self-update'
 alias 'm:c'='mise config'
 alias 'm:dr'='mise doctor'
 alias 'm:gc'='mise generate config'
 alias 'm.'='mise install'
-alias 'm_'='mise self-update'
+alias 'm:r'='mise run'
 alias 'm:t'='mise trust'
 alias 'm:u'='mise use'
 alias 'm:ul'='mise use --env local'
-
+alias 'm:x'='mise exec --'

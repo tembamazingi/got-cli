@@ -50,10 +50,9 @@ export PATH="$HOME/.local/bin:$PATH"
 # LOAD ALIASES FOR AI AGENTS.
 [[ -f "$HOME/.agent" ]] && source "$HOME/.agent"
 
-# https://github.com/Homebrew/homebrew-command-not-found/
-HB_CNF_HANDLER="$(brew --repository)/Library/Taps/homebrew/homebrew-command-not-found/handler.sh"
-if [ -f "$HB_CNF_HANDLER" ]; then
-source "$HB_CNF_HANDLER";
+HOMEBREW_COMMAND_NOT_FOUND_HANDLER="$(brew --repository)/Library/Homebrew/command-not-found/handler.sh"
+if [ -f "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER" ]; then
+  source "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER";
 fi
 
 export NODE_EXTRA_CA_CERTS="$HOME/.config/certificates/zscaler-root.pem"
