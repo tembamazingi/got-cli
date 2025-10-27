@@ -163,9 +163,10 @@ function gstash() {
     case "$action" in
         "s") git stash ;;
         "a") git stash apply ;;
+        "p") git stash pop ;;
         "c") git stash clear ;;
         "l") git stash list ;;
-        *) echo "Invalid action. Available actions: 's' <=> save, 'a' <=> apply, 'c' <=> clear, 'l' <=> list" ;;
+        *) echo "Invalid action. Available actions: 's' <=> save, 'a' <=> apply, 'p' <=> pop, 'c' <=> clear, 'l' <=> list" ;;
     esac
 }
 
