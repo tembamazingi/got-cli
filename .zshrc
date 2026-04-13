@@ -20,12 +20,6 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 
-PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-
-# LOAD RUNTIMES.
-[[ -f "$HOME/.runtimes" ]] && source "$HOME/.runtimes"
-
 # LOAD ALL-PURPOSE ALIASES.
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
@@ -44,19 +38,34 @@ export PATH="$HOME/.local/bin:$PATH"
 # LOAD MAC-SPECIFIC ALIASES.
 [[ -f "$HOME/.macos" ]] && source "$HOME/.macos"
 
-# LOAD ALIASES FOR CLOUD SERVICES.
-[[ -f "$HOME/.cloud" ]] && source "$HOME/.cloud"
+#INIT SCRIPT: mise-en-place
+if command -v mise &> /dev/null; then
+    eval "$(mise activate zsh)"
+fi
 
-# LOAD ALIASES FOR AI AGENTS.
-[[ -f "$HOME/.agent" ]] && source "$HOME/.agent"
+# INIT SCRIPTS: Homebrew
+export HOMEBREW_PREFIX=/opt/homebrew
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 HOMEBREW_COMMAND_NOT_FOUND_HANDLER="$(brew --repository)/Library/Homebrew/command-not-found/handler.sh"
 if [ -f "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER" ]; then
   source "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER";
 fi
 
+PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+
+export PATH="$HOME/.local/bin:$PATH"
 export NODE_EXTRA_CA_CERTS="$HOME/.config/certificates/zscaler-root.pem"
 
-# INIT SCRIPTS FOR STARSHIP
+# LOAD RUNTIMES.
+[[ -f "$HOME/.runtimes" ]] && source "$HOME/.runtimes"
+
+# LOAD ALIASES FOR CLOUD SERVICES.
+[[ -f "$HOME/.cloud" ]] && source "$HOME/.cloud"
+
+# LOAD ALIASES FOR AI AGENTS.
+[[ -f "$HOME/.agent" ]] && source "$HOME/.agent"
+
+# INIT SCRIPTS: Starship
 eval "$(starship init zsh)"
 # END OF FILE
