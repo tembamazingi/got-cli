@@ -39,7 +39,7 @@ source ~/.zshrc
 - **`.macos`** - macOS-specific settings and Homebrew configuration
 
 ### Specialized Configurations
-- **`.runtimes`** - Runtime managers (mise, asdf, pyenv, OrbStack)
+- **`.runtimes`** - Runtime managers (mise, asdf, pyenv etc)
 - **`.cloud`** - AWS and cloud service configurations
 - **`.agent`** - AI agent configurations (Claude, Anthropic)
 
