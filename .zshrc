@@ -38,11 +38,6 @@ setopt HIST_REDUCE_BLANKS
 # LOAD MAC-SPECIFIC ALIASES.
 [[ -f "$HOME/.macos" ]] && source "$HOME/.macos"
 
-#INIT SCRIPT: mise-en-place
-if command -v mise &> /dev/null; then
-    eval "$(mise activate zsh)"
-fi
-
 # INIT SCRIPTS: Homebrew
 export HOMEBREW_PREFIX=/opt/homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -50,6 +45,11 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 HOMEBREW_COMMAND_NOT_FOUND_HANDLER="$(brew --repository)/Library/Homebrew/command-not-found/handler.sh"
 if [ -f "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER" ]; then
   source "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER";
+fi
+
+#INIT SCRIPT: mise-en-place
+if command -v mise &> /dev/null; then
+    eval "$(mise activate zsh)"
 fi
 
 PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
