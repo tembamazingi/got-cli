@@ -9,6 +9,7 @@ alias 'wall'='killall Dock'
 
 # HOMEBREW
 alias 'b.'='brew install'
+alias 'b..'='brew reinstall --force'
 alias 'b:f'='brew search'
 alias 'b:c'='brew cleanup'
 alias 'b:dr'='brew doctor'
