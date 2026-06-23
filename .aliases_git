@@ -52,4 +52,10 @@ alias 'g:s'='git status'
 alias 'g:s_'='git restore'
 
 alias 'g:un'='git rm --cached'
+
+alias 'g:w'='git worktree list'
+alias 'g:wa'='git worktree add'
+alias 'g:wr'='git worktree remove'
+alias 'g:wr_'='git worktree remove --force'
+alias 'g:wp'='git worktree prune'
 # END OF FILE
