@@ -1,5 +1,5 @@
 #!/bin/zsh
-dotfiles=(.agent .aliases .aliases_git .aliases_runtimes .cloud .functions .git-prompt.sh .gitexcludes .runtimes .zprofile .zshrc)
+dotfiles=(.agent .aliases .aliases_git .aliases_runtimes .cloud .functions .git-prompt.sh .gitexcludes .runtimes .zprofile .zshenv .zshrc)
 
 echo -n "\033[38;5;160m\n🗑️ Removing symlinks to outdated dotfiles:\033[0m"
 for dotfile in "${dotfiles[@]}"; do
