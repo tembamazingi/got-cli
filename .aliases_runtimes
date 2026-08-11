@@ -1,5 +1,6 @@
 ######################### MISE #########################
 alias 'm_'='mise self-update'
+alias 'm__'='mise reshim'
 alias 'm:c'='mise config'
 alias 'm:dr'='mise doctor'
 alias 'm:gc'='mise generate config -t .tool-versions --output=mise.toml'
