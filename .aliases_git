@@ -19,12 +19,12 @@ alias 'g:c_'='git commit --amend'
 
 alias 'g:co'='git checkout'
 alias 'g:cd'='git checkout dev'
-alias 'g:cm'='git checkout main'
+alias 'g:cm'='git checkout $(.fn:g:primary)'
 
 alias 'g:cl'='git clone'
 
 alias 'g:dw'='git diff --color-words'
-alias 'g:dw_'='git diff --color-words main dev'
+alias 'g:dw_'='git diff --color-words $(.fn:g:primary) dev'
 
 alias 'g:fo'='git fetch origin'
 
@@ -36,15 +36,15 @@ alias 'g:lg'="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Cres
 alias 'g:lp'='git log -p -w'
 alias 'g:ls'="git log --stat --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
 
-alias 'g:mm'='git merge main'
-alias 'g:mm_'='git merge origin/main'
+alias 'g:mm'='git merge $(.fn:g:primary)'
+alias 'g:mm_'='git merge origin/$(.fn:g:primary)'
 alias 'g:md'='git merge dev'
 alias 'g:md_'='git merge origin/dev'
 
 alias 'g:pl'='git fetch && git merge'
 
 alias 'g:ps'='git push'
-alias 'g:ps.'='git push -u origin main'
+alias 'g:ps.'='git push -u origin $(.fn:g:primary)'
 alias 'g:ps_'='this_branch=$(git rev-parse --abbrev-ref HEAD); git push --set-upstream origin $this_branch'
 alias 'g:ps:'='git push origin --delete'
 

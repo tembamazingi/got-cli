@@ -4,6 +4,23 @@
   print -l ${(ok)functions[(I).*]}
 
 }
+
+# Git: resolve primary branch name (main/master/trunk/etc), not hardcoded
+.fn:g:primary () {
+
+  local ref=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null)
+  [ -n "$ref" ] && echo "${ref#origin/}" && return
+
+  local candidate
+  for candidate in main master trunk; do
+    git show-ref --quiet --verify "refs/heads/$candidate" && echo "$candidate" && return
+  done
+
+  git config --get init.defaultBranch && return
+
+  echo main
+
+}
 # Archives - create new
 .fn:a () {
   if [ "$#" -lt 2 ] ; then
@@ -114,9 +131,10 @@
 .fn:g:br. () {
 
   remote=origin;
+  main_branch=$(.fn:g:primary)
 
   # Get all remote branches
-  remote_branches=$(git branch -r | grep $remote | grep -v /main | grep -v /HEAD | awk '{gsub(/^[^\/]+\//,"",$1); print $1}')
+  remote_branches=$(git branch -r | grep $remote | grep -v "/${main_branch}\$" | grep -v /HEAD | awk '{gsub(/^[^\/]+\//,"",$1); print $1}')
 
   for brname in $remote_branches; do
     # Check if branch already exists locally
@@ -130,9 +148,10 @@
     fi
   done
 
-  # Return to master branch
-  echo "Returning to master branch"
-  git checkout master
+  # Return to primary branch
+  main_branch=$(.fn:g:primary)
+  echo "Returning to $main_branch branch"
+  git checkout "$main_branch"
 }
 
 # Git: Find files in the repository that are redundant and not referenced anywhere in the application's code.
@@ -146,10 +165,11 @@
 
 }
 
-# Git: Delete stale branches that have already been merged into the main branch.
+# Git: Delete stale branches that have already been merged into the primary branch.
 .fn:g:clean:br () {
 
-  for k in $(git branch --format="%(refname:short)" --merged main); do
+  local main_branch=$(.fn:g:primary)
+  for k in $(git branch --format="%(refname:short)" --merged "$main_branch"); do
     if [[ $(git log -1 --since='9 months ago' -s $k |wc -l)==0 ]]; then
       git log -1 --date=relative --oneline --pretty="%C(red)[Date: %ad]%C(cyan) <=> Last Commit: %C(yellow)%s" $k
     fi
