@@ -47,15 +47,15 @@ if [ -f "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER" ]; then
   source "$HOMEBREW_COMMAND_NOT_FOUND_HANDLER";
 fi
 
-#INIT SCRIPT: mise-en-place
-if command -v mise &> /dev/null; then
-    eval "$(mise activate zsh)"
-fi
-
 PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 
 export PATH="$HOME/.local/bin:$PATH"
 export NODE_EXTRA_CA_CERTS="$HOME/.config/certificates/zscaler-root.pem"
+
+#INIT SCRIPT: mise-en-place
+if command -v mise &> /dev/null; then
+    eval "$(mise activate zsh)"
+fi
 
 # LOAD RUNTIMES.
 [[ -f "$HOME/.runtimes" ]] && source "$HOME/.runtimes"
@@ -69,3 +69,7 @@ export NODE_EXTRA_CA_CERTS="$HOME/.config/certificates/zscaler-root.pem"
 # INIT SCRIPTS: Starship
 eval "$(starship init zsh)"
 # END OF FILE
+
+# pi coding agent: application inference profile ARNs lack a model name, so
+# pi can't auto-detect prompt-caching support — force it on.
+export AWS_BEDROCK_FORCE_CACHE=1
