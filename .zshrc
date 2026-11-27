@@ -66,10 +66,10 @@ fi
 # LOAD ALIASES FOR AI AGENTS.
 [[ -f "$HOME/.agent" ]] && source "$HOME/.agent"
 
+# LOAD GITHUB AUTH (untracked, holds tokens).
+[[ -f "$HOME/.github_auth" ]] && source "$HOME/.github_auth"
+
 # INIT SCRIPTS: Starship
 eval "$(starship init zsh)"
 # END OF FILE
-
-# pi coding agent: application inference profile ARNs lack a model name, so
-# pi can't auto-detect prompt-caching support — force it on.
-export AWS_BEDROCK_FORCE_CACHE=1
+export PATH="/Users/temba.mazingi/.local/bin:$PATH"
